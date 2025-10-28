@@ -224,7 +224,7 @@ export default function ContactPage() {
               <CardContent className="p-0">
                 <div className="aspect-video w-full overflow-hidden rounded-lg">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3764.2!2d-99.1867!3d19.3687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDIyJzA3LjMiTiA5OcKwMTEnMTIuMSJX!5e0!3m2!1ses!2smx!4v1234567890"
+                    ssrc="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3898.7388093201516!2d-57.55374385332987!3d-37.99979325166426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584dc029c9d1af9%3A0x3075f07b36a187af!2sDiagn%C3%B3stico%20Odontol%C3%B3gico%20Por%20Imagen!5e1!3m2!1ses!2sar!4v1761692329678!5m2!1ses!2sar"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
