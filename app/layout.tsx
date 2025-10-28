@@ -12,7 +12,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "DOI - Diagnóstico Odontológico por Imagen",
   description: "Especialistas en radiología dental y maxilofacial desde 1992",
-  generator: "v0.app",
+  generator: "",
 }
 
 export default function RootLayout({
