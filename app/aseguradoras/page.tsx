@@ -30,10 +30,10 @@ export default function InsuranceCompaniesPage() {
           <div className="mx-auto max-w-3xl text-center">
             <Shield className="mx-auto mb-6 h-16 w-16 text-primary" />
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-balance md:text-5xl">
-              Aseguradoras con Convenio
+              Obras Sociales
             </h1>
             <p className="text-lg text-muted-foreground text-pretty md:text-xl">
-              Trabajamos con las principales aseguradoras del país para facilitar el acceso a nuestros servicios
+              Trabajamos con las principales Obras Sociales del país para facilitar el acceso a nuestros servicios
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function InsuranceCompaniesPage() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Beneficios de Nuestros Convenios</h2>
+            <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Beneficios de Nuestras Obras Sociales</h2>
           </div>
 
           <div className="mb-12 grid gap-6 md:grid-cols-3">
@@ -54,7 +54,7 @@ export default function InsuranceCompaniesPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Nos encargamos de toda la gestión con tu aseguradora, sin trámites adicionales para ti
+                  Nos encargamos de toda la gestión con tu Obra Social, sin trámites adicionales para ti
                 </CardDescription>
               </CardContent>
             </Card>
@@ -78,7 +78,7 @@ export default function InsuranceCompaniesPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  La mayoría de nuestros estudios están cubiertos por las pólizas de gastos médicos mayores
+                  La mayoría de nuestros estudios están cubiertos por los seguros de gastos médicos mayores
                 </CardDescription>
               </CardContent>
             </Card>
@@ -114,8 +114,8 @@ export default function InsuranceCompaniesPage() {
               <Card className="border-primary/50 bg-primary/5">
                 <CardContent className="pt-6">
                   <p className="text-center text-sm text-muted-foreground">
-                    Si tu aseguradora no aparece en la lista, contáctanos. Podemos gestionar tu estudio y proporcionarte
-                    la factura para que realices el reembolso directamente con tu aseguradora.
+                    Si tu obra social no aparece en la lista, contáctanos. Podemos gestionar tu estudio y proporcionarte
+                    la factura para que realices el reembolso directamente con tu obra social.
                   </p>
                 </CardContent>
               </Card>

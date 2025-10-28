@@ -97,7 +97,7 @@ export function Header() {
             Nosotros
           </Link>
           <Link href="/aseguradoras" className="text-sm font-medium transition-colors hover:text-primary">
-            Aseguradoras
+            Obras Sociales
           </Link>
           <Link href="/servicios" className="text-sm font-medium transition-colors hover:text-primary">
             Servicios
@@ -162,7 +162,7 @@ export function Header() {
               className="text-sm font-medium transition-colors hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Aseguradoras
+              Obras Sociales
             </Link>
             <Link
               href="/servicios"

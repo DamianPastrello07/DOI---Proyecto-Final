@@ -69,11 +69,11 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Av. Insurgentes Sur 1605, Piso 8
+                    Moreno 3020 1° P
                     <br />
-                    Col. San José Insurgentes
+                    Mar del Plata
                     <br />
-                    03900, Ciudad de México, CDMX
+                    7600, Buenos Aires
                   </p>
                 </CardContent>
               </Card>
@@ -85,7 +85,7 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <a href="tel:5555555555" className="text-muted-foreground hover:text-primary">
-                    55 5555 5555
+                  Tel.: (0223) 491-3024
                   </a>
                   <p className="mt-2 text-sm text-muted-foreground">Lunes a Viernes: 8:00 AM - 7:00 PM</p>
                   <p className="text-sm text-muted-foreground">Sábados: 9:00 AM - 2:00 PM</p>
@@ -99,7 +99,7 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <a href="mailto:contacto@doi.com.mx" className="text-muted-foreground hover:text-primary">
-                    contacto@doi.com.mx
+                    doi@doi.com.ar
                   </a>
                   <p className="mt-2 text-sm text-muted-foreground">Respondemos en menos de 24 horas</p>
                 </CardContent>

@@ -26,7 +26,7 @@ export function Footer() {
                 Nosotros
               </Link>
               <Link href="/aseguradoras" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                Aseguradoras
+                Obras Sociales
               </Link>
               <Link href="/servicios" className="text-sm text-muted-foreground transition-colors hover:text-primary">
                 Servicios
@@ -44,13 +44,13 @@ export function Footer() {
               <div className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 text-primary" />
                 <p className="text-sm text-muted-foreground">
-                  Av. Insurgentes Sur 1605, Piso 8, Col. San José Insurgentes, CDMX
+                  Moreno 3020 1° P, Mar del Plata, Buenos Aires
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-primary" />
                 <a href="tel:5555555555" className="text-sm text-muted-foreground hover:text-primary">
-                  55 5555 5555
+                Tel.: (0223) 491-3024
                 </a>
               </div>
               <div className="flex items-center gap-2">
