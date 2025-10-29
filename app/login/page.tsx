@@ -19,6 +19,7 @@ export default function LoginPage() {
     password: "",
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
@@ -28,6 +29,26 @@ export default function LoginPage() {
     }
   }, [searchParams])
 
+  const handleGoogleSignIn = async () => {
+    const supabase = createClient()
+    setIsGoogleLoading(true)
+    setError(null)
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+
+      if (error) throw error
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : "Error al iniciar sesión con Google")
+      setIsGoogleLoading(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
@@ -36,27 +57,18 @@ export default function LoginPage() {
     setSuccessMessage(null)
 
     try {
-      console.log("[v0] Attempting login with email:", formData.email)
-
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       })
 
-      console.log("[v0] Auth response:", { data, authError })
-
       if (authError) {
-        console.log("[v0] Auth error:", authError.message)
         throw new Error("Credenciales incorrectas")
       }
 
       if (!data.user) {
-        console.log("[v0] No user data returned")
         throw new Error("No se pudo obtener la información del usuario")
       }
-
-      console.log("[v0] User authenticated:", data.user.id)
-      console.log("[v0] Fetching profile for user:", data.user.id)
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -64,17 +76,11 @@ export default function LoginPage() {
         .eq("id", data.user.id)
         .single()
 
-      console.log("[v0] Profile response:", { profile, profileError })
-
       if (profileError) {
-        console.log("[v0] Profile error:", profileError.message)
         router.refresh()
         router.push("/cliente")
         return
       }
-
-      console.log("[v0] User role:", profile.role)
-      console.log("[v0] Redirecting based on role...")
 
       router.refresh()
       if (profile.role === "admin") {
@@ -85,7 +91,6 @@ export default function LoginPage() {
         router.push("/cliente")
       }
     } catch (error: unknown) {
-      console.log("[v0] Caught error:", error)
       setError(error instanceof Error ? error.message : "Error al iniciar sesión")
     } finally {
       setIsLoading(false)
@@ -119,6 +124,50 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full bg-transparent"
+                size="lg"
+                onClick={handleGoogleSignIn}
+                disabled={isGoogleLoading || isLoading}
+              >
+                {isGoogleLoading ? (
+                  "Conectando con Google..."
+                ) : (
+                  <>
+                    <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
+                      <path
+                        fill="currentColor"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      />
+                    </svg>
+                    Continuar con Google
+                  </>
+                )}
+              </Button>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">O continúa con email</span>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Correo Electrónico</Label>
                 <Input
@@ -153,7 +202,7 @@ export default function LoginPage() {
               {successMessage && <p className="text-sm text-green-600">{successMessage}</p>}
               {error && <p className="text-sm text-red-500">{error}</p>}
 
-              <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              <Button type="submit" className="w-full" size="lg" disabled={isLoading || isGoogleLoading}>
                 {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
               </Button>
 
