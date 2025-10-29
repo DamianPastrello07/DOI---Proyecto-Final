@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, LogIn } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
@@ -99,6 +99,34 @@ export default function LoginPage() {
     }))
   }
 
+  // ✅ Nuevo: Inicio de sesión con Google
+  const handleGoogleLogin = async () => {
+    const supabase = createClient()
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: "https://nqghmkthmbxgozlndmej.supabase.co/auth/v1/callback",
+          queryParams: {
+            client_id: "448208271515-pcatdabglhmtjgslper4rj4dvhehqoqa.apps.googleusercontent.com",
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      })
+
+      if (error) throw error
+    } catch (error: unknown) {
+      console.error("Error al iniciar sesión con Google:", error)
+      setError("No se pudo iniciar sesión con Google.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-muted/30 px-4 py-12">
       <div className="w-full max-w-md">
@@ -117,6 +145,7 @@ export default function LoginPage() {
             <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
             <CardDescription>Accede a tu cuenta para gestionar tus estudios</CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -157,7 +186,25 @@ export default function LoginPage() {
                 {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
               </Button>
 
-              <div className="text-center text-sm text-muted-foreground">
+              {/* 🔹 Nuevo botón Google */}
+              <div className="relative my-4 flex items-center">
+                <div className="flex-grow border-t border-gray-300"></div>
+                <span className="mx-2 text-xs text-gray-500">o</span>
+                <div className="flex-grow border-t border-gray-300"></div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2"
+                onClick={handleGoogleLogin}
+                disabled={isLoading}
+              >
+                <LogIn className="h-4 w-4" />
+                Iniciar sesión con Google
+              </Button>
+
+              <div className="text-center text-sm text-muted-foreground mt-2">
                 ¿No tienes una cuenta?{" "}
                 <Link href="/registro" className="font-medium text-primary hover:underline">
                   Regístrate aquí
