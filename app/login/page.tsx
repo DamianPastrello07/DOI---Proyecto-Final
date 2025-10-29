@@ -1,5 +1,6 @@
 "use client"
 
+import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -13,7 +14,10 @@ import { createClient } from "@/lib/supabase/client"
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [formData, setFormData] = useState({ email: "", password: "" })
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -24,39 +28,35 @@ export default function LoginPage() {
     }
   }, [searchParams])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const supabase = createClient()
     setIsLoading(true)
     setError(null)
     setSuccessMessage(null)
 
-    const supabase = createClient()
-
     try {
-      console.log("[LOGIN] Intentando iniciar sesión con:", formData.email)
+      console.log("[Attempting login with email:", formData.email)
 
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       })
 
+      console.log("Auth response:", { data, authError })
+
       if (authError) {
-        console.error("[LOGIN ERROR]", authError.message)
-        throw new Error("Correo o contraseña incorrectos")
+        console.log("Auth error:", authError.message)
+        throw new Error("Credenciales incorrectas")
       }
 
       if (!data.user) {
+        console.log("No user data returned")
         throw new Error("No se pudo obtener la información del usuario")
       }
 
-      console.log("[LOGIN OK] Usuario:", data.user.id)
+      console.log("[v0] User authenticated:", data.user.id)
+      console.log("[v0] Fetching profile for user:", data.user.id)
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -64,14 +64,17 @@ export default function LoginPage() {
         .eq("id", data.user.id)
         .single()
 
+      console.log("Profile response:", { profile, profileError })
+
       if (profileError) {
-        console.warn("[PROFILE] Error al obtener perfil:", profileError.message)
+        console.log("Profile error:", profileError.message)
         router.refresh()
         router.push("/cliente")
         return
       }
 
-      console.log("[ROLE DETECTADO]", profile.role)
+      console.log("User role:", profile.role)
+      console.log("Redirecting based on role...")
 
       router.refresh()
       if (profile.role === "admin") {
@@ -81,12 +84,19 @@ export default function LoginPage() {
       } else {
         router.push("/cliente")
       }
-    } catch (err: any) {
-      console.error("[LOGIN EXCEPTION]", err)
-      setError(err?.message || "Error al iniciar sesión")
+    } catch (error: unknown) {
+      console.log("Caught error:", error)
+      setError(error instanceof Error ? error.message : "Error al iniciar sesión")
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }))
   }
 
   return (
@@ -107,7 +117,6 @@ export default function LoginPage() {
             <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
             <CardDescription>Accede a tu cuenta para gestionar tus estudios</CardDescription>
           </CardHeader>
-
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
