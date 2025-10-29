@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, LogIn } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
@@ -36,22 +36,22 @@ export default function LoginPage() {
     setSuccessMessage(null)
 
     try {
-      console.log("[Attempting login with email:", formData.email)
+      console.log("[v0] Attempting login with email:", formData.email)
 
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       })
 
-      console.log("Auth response:", { data, authError })
+      console.log("[v0] Auth response:", { data, authError })
 
       if (authError) {
-        console.log("Auth error:", authError.message)
+        console.log("[v0] Auth error:", authError.message)
         throw new Error("Credenciales incorrectas")
       }
 
       if (!data.user) {
-        console.log("No user data returned")
+        console.log("[v0] No user data returned")
         throw new Error("No se pudo obtener la información del usuario")
       }
 
@@ -64,17 +64,17 @@ export default function LoginPage() {
         .eq("id", data.user.id)
         .single()
 
-      console.log("Profile response:", { profile, profileError })
+      console.log("[v0] Profile response:", { profile, profileError })
 
       if (profileError) {
-        console.log("Profile error:", profileError.message)
+        console.log("[v0] Profile error:", profileError.message)
         router.refresh()
         router.push("/cliente")
         return
       }
 
-      console.log("User role:", profile.role)
-      console.log("Redirecting based on role...")
+      console.log("[v0] User role:", profile.role)
+      console.log("[v0] Redirecting based on role...")
 
       router.refresh()
       if (profile.role === "admin") {
@@ -85,7 +85,7 @@ export default function LoginPage() {
         router.push("/cliente")
       }
     } catch (error: unknown) {
-      console.log("Caught error:", error)
+      console.log("[v0] Caught error:", error)
       setError(error instanceof Error ? error.message : "Error al iniciar sesión")
     } finally {
       setIsLoading(false)
@@ -97,34 +97,6 @@ export default function LoginPage() {
       ...prev,
       [e.target.name]: e.target.value,
     }))
-  }
-
-  // ✅ Nuevo: Inicio de sesión con Google
-  const handleGoogleLogin = async () => {
-    const supabase = createClient()
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: "https://nqghmkthmbxgozlndmej.supabase.co/auth/v1/callback",
-          queryParams: {
-            client_id: "448208271515-pcatdabglhmtjgslper4rj4dvhehqoqa.apps.googleusercontent.com",
-            access_type: "offline",
-            prompt: "consent",
-          },
-        },
-      })
-
-      if (error) throw error
-    } catch (error: unknown) {
-      console.error("Error al iniciar sesión con Google:", error)
-      setError("No se pudo iniciar sesión con Google.")
-    } finally {
-      setIsLoading(false)
-    }
   }
 
   return (
@@ -145,7 +117,6 @@ export default function LoginPage() {
             <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
             <CardDescription>Accede a tu cuenta para gestionar tus estudios</CardDescription>
           </CardHeader>
-
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -186,25 +157,7 @@ export default function LoginPage() {
                 {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
               </Button>
 
-              {/* 🔹 Nuevo botón Google */}
-              <div className="relative my-4 flex items-center">
-                <div className="flex-grow border-t border-gray-300"></div>
-                <span className="mx-2 text-xs text-gray-500">o</span>
-                <div className="flex-grow border-t border-gray-300"></div>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full flex items-center justify-center gap-2"
-                onClick={handleGoogleLogin}
-                disabled={isLoading}
-              >
-                <LogIn className="h-4 w-4" />
-                Iniciar sesión con Google
-              </Button>
-
-              <div className="text-center text-sm text-muted-foreground mt-2">
+              <div className="text-center text-sm text-muted-foreground">
                 ¿No tienes una cuenta?{" "}
                 <Link href="/registro" className="font-medium text-primary hover:underline">
                   Regístrate aquí
